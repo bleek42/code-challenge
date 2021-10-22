@@ -30,21 +30,28 @@ router.get('/data/:loan_number', async (req, res, next) => {
 
 router.get('/attribute', async (req, res, next) => {
 	const firstName = req.query.first_name;
-	console.log(typeof firstName);
-	try {
-		for (let i = 0; i < data.length; i++) {
-			const firstNameInJson = data[i].firstName;
-			if (firstName === firstNameInJson) {
-				return res.status(200).json(data[i]);
+	const lastName = req.query.last_name;
+	const city = req.query.city;
+	if (firstName !== undefined || lastName !== undefined || city !== undefined) {
+		try {
+			for (let i = 0; i < data.length; i++) {
+				const firstNameInJson = data[i].first_name;
+				const lastNameInJson = data[i].last_name;
+				const cityInJson = data[i].city;
+				for (let j = 0; j < firstNameInJson.length; j++) {
+					const searchArray = [];
+					if (firstName[j] === firstNameInJson[j]) {
+						searchArray.push(data[i]);
+						console.log(searchArray);
+					}
+					return res.status(200).json(searchArray);
+				}
 			}
-			else {
-				return res.status(404).json({ error: `Cannot GET ${firstName}!` });
-			}
+			return res.status(404).json({ error: `Cannot GET ${firstName}!` });
 		}
-
-	}
-	catch (err) {
-		next(err);
+		catch (err) {
+			next(err);
+		}
 	}
 });
 
